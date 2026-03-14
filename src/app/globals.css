@@ -1,0 +1,24 @@
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  /* Severity colors */
+  --color-severity-low: #22c55e;
+  --color-severity-med: #eab308;
+  --color-severity-high: #f97316;
+  --color-severity-critical: #ef4444;
+
+  /* Status colors */
+  --color-status-open: #3b82f6;
+  --color-status-in-progress: #eab308;
+  --color-status-resolved: #22c55e;
+  --color-status-closed: #6b7280;
+
+  /* Heat map intensity scale */
+  --color-heat-0: #fef2f2;
+  --color-heat-1: #fee2e2;
+  --color-heat-2: #fecaca;
+  --color-heat-3: #fca5a5;
+  --color-heat-4: #f87171;
+  --color-heat-5: #ef4444;
+}
