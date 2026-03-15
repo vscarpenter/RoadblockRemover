@@ -15,10 +15,10 @@ function RoadblockView(): ReactElement {
 
   if (!id) {
     return (
-      <div className="rounded-md bg-yellow-50 p-4">
-        <p className="text-sm text-yellow-800">
+      <div className="rounded-xl border border-amber-500/20 bg-amber-500/5 p-4">
+        <p className="text-sm text-amber-400">
           No roadblock ID provided. Return to the{" "}
-          <a href="/dashboard/" className="text-blue-600 hover:underline">
+          <a href="/dashboard/" className="text-[var(--color-accent-hover)] hover:underline">
             dashboard
           </a>
           .
@@ -43,8 +43,8 @@ function RoadblockContent({ id }: { id: string }): ReactElement | null {
 
   if (error) {
     return (
-      <div className="rounded-md bg-red-50 p-4">
-        <p className="text-sm text-red-800">{error}</p>
+      <div className="rounded-xl border border-red-500/20 bg-red-500/5 p-4">
+        <p className="text-sm text-red-400">{error}</p>
       </div>
     );
   }

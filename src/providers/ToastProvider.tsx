@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 import type { ReactElement, ReactNode } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 type ToastType = "success" | "error" | "info";
 
@@ -33,10 +34,19 @@ export function useToast(): ToastContextValue {
   return context;
 }
 
-const TYPE_STYLES: Record<ToastType, string> = {
-  success: "bg-green-600",
-  error: "bg-red-600",
-  info: "bg-blue-600",
+const TYPE_STYLES: Record<ToastType, { bar: string; container: string }> = {
+  success: {
+    bar: "bg-emerald-400",
+    container: "border-emerald-500/20 text-emerald-400",
+  },
+  error: {
+    bar: "bg-red-400",
+    container: "border-red-500/20 text-red-400",
+  },
+  info: {
+    bar: "bg-[var(--color-accent)]",
+    container: "border-[var(--color-accent)]/20 text-[var(--color-accent-hover)]",
+  },
 };
 
 export function ToastProvider({ children }: { children: ReactNode }): ReactElement {
@@ -60,15 +70,27 @@ export function ToastProvider({ children }: { children: ReactNode }): ReactEleme
     <ToastContext.Provider value={value}>
       {children}
       <div className="fixed bottom-4 right-4 z-50 flex flex-col gap-2">
-        {toasts.map((toast) => (
-          <div
-            key={toast.id}
-            className={`${TYPE_STYLES[toast.type]} rounded-md px-4 py-3 text-sm text-white shadow-lg animate-in fade-in slide-in-from-bottom-2`}
-            role="alert"
-          >
-            {toast.message}
-          </div>
-        ))}
+        <AnimatePresence>
+          {toasts.map((toast) => {
+            const styles = TYPE_STYLES[toast.type];
+            return (
+              <motion.div
+                key={toast.id}
+                initial={{ opacity: 0, y: 16, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -8, scale: 0.95 }}
+                transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                className={`flex overflow-hidden rounded-lg border bg-[var(--color-surface-raised)]/95 shadow-lg backdrop-blur-xl ${styles.container}`}
+                role="alert"
+              >
+                <div className={`w-1 shrink-0 ${styles.bar}`} />
+                <p className="px-4 py-3 text-sm">
+                  {toast.message}
+                </p>
+              </motion.div>
+            );
+          })}
+        </AnimatePresence>
       </div>
     </ToastContext.Provider>
   );

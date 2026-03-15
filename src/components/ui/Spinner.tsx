@@ -14,7 +14,7 @@ const SIZE_CLASSES = {
 export function Spinner({ size = "md", className = "" }: SpinnerProps): ReactElement {
   return (
     <div
-      className={`animate-spin rounded-full border-2 border-gray-300 border-t-blue-600 ${SIZE_CLASSES[size]} ${className}`}
+      className={`animate-spin rounded-full border-2 border-[var(--color-border-default)] border-t-[var(--color-accent)] ${SIZE_CLASSES[size]} ${className}`}
       role="status"
       aria-label="Loading"
     />

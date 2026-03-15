@@ -12,15 +12,15 @@ export function RoadblockCard({ roadblock }: RoadblockCardProps): ReactElement {
   return (
     <Link
       href={`/roadblocks/?id=${roadblock.id}`}
-      className="block rounded-md border border-gray-200 bg-white p-3 shadow-sm transition-shadow hover:shadow-md"
+      className="block rounded-lg border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-3 transition-all duration-150 hover:border-[var(--color-border-default)] hover:bg-[var(--color-surface-raised)]"
     >
-      <h3 className="mb-2 text-sm font-medium text-gray-900 line-clamp-2">
+      <h3 className="mb-2 text-sm font-medium text-[var(--color-text-primary)] line-clamp-2">
         {roadblock.title}
       </h3>
       <div className="flex flex-wrap items-center gap-2">
         <SeverityBadge severity={roadblock.severity} />
         <StatusBadge status={roadblock.status} />
-        <span className="text-xs text-gray-500">
+        <span className="font-mono text-[10px] text-[var(--color-text-tertiary)]">
           {roadblock.estimated_waste}h/wk
         </span>
       </div>

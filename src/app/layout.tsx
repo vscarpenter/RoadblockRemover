@@ -1,11 +1,10 @@
 import type { ReactElement } from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import "@fontsource-variable/inter";
+import "@fontsource-variable/jetbrains-mono";
 import { AuthProvider } from "@/providers/AuthProvider";
 import { ToastProvider } from "@/providers/ToastProvider";
 import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Roadblock Remover",
@@ -20,7 +19,7 @@ export default function RootLayout({
 }): ReactElement {
   return (
     <html lang="en">
-      <body className={`${inter.className} antialiased`}>
+      <body className="font-sans antialiased noise-overlay">
         <AuthProvider>
           <ToastProvider>{children}</ToastProvider>
         </AuthProvider>

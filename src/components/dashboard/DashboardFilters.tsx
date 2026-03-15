@@ -33,9 +33,11 @@ export function DashboardFilters({
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-4 rounded-lg bg-white p-4 shadow-sm">
+    <div className="flex flex-wrap items-center gap-4 rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-4">
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">Status:</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)]">
+          Status
+        </span>
         <div className="flex flex-wrap gap-1">
           {STATUSES.map((s) => {
             const isSelected = selectedStatuses.includes(s.value);
@@ -44,10 +46,10 @@ export function DashboardFilters({
                 key={s.value}
                 type="button"
                 onClick={() => toggleStatus(s.value)}
-                className={`rounded-full px-3 py-1 text-xs font-medium transition-colors ${
+                className={`rounded-lg px-3 py-1.5 text-xs font-medium transition-all duration-150 ${
                   isSelected
-                    ? `${s.bgColor} ${s.color}`
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    ? `${s.bgColor} ${s.color} border border-current/15`
+                    : "border border-[var(--color-border-subtle)] text-[var(--color-text-tertiary)] hover:border-[var(--color-border-default)] hover:text-[var(--color-text-secondary)]"
                 }`}
               >
                 {s.label}
@@ -58,13 +60,15 @@ export function DashboardFilters({
       </div>
 
       <div className="flex items-center gap-2">
-        <span className="text-sm font-medium text-gray-700">Period:</span>
+        <span className="font-mono text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)]">
+          Period
+        </span>
         <select
           value={timeFrame ?? ""}
           onChange={(e) =>
             onTimeFrameChange(e.target.value ? Number(e.target.value) : null)
           }
-          className="rounded-md border border-gray-300 px-3 py-1.5 text-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface-raised)] px-3 py-1.5 text-xs text-[var(--color-text-primary)] transition-colors focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]/50"
         >
           {TIME_FRAMES.map((tf) => (
             <option key={tf.label} value={tf.value ?? ""}>

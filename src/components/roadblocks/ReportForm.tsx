@@ -56,7 +56,6 @@ export function ReportForm(): ReactElement {
     setIsSubmitting(true);
 
     try {
-      // Payload intentionally omits any user/author reference for anonymity
       await pb.collection("roadblocks").create({
         category: category as Category,
         severity: severity as Severity,
@@ -81,8 +80,11 @@ export function ReportForm(): ReactElement {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      <div className="rounded-md bg-blue-50 p-4">
-        <p className="text-sm text-blue-800">
+      <div className="flex items-start gap-3 rounded-xl border border-[var(--color-accent)]/15 bg-[var(--color-accent-muted)] p-4">
+        <svg className="mt-0.5 h-5 w-5 shrink-0 text-[var(--color-accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+          <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
+        </svg>
+        <p className="text-sm text-[var(--color-accent-hover)]">
           Your submission is completely anonymous. No identifying information is
           stored with this report.
         </p>
@@ -115,7 +117,7 @@ export function ReportForm(): ReactElement {
           placeholder="Brief description of the roadblock"
           error={errors.title}
         />
-        <p className="mt-1 text-right text-xs text-gray-400">
+        <p className="mt-1 text-right font-mono text-[10px] text-[var(--color-text-tertiary)]">
           {title.length}/{TITLE_MAX_LENGTH}
         </p>
       </div>
@@ -141,7 +143,11 @@ export function ReportForm(): ReactElement {
         error={errors.estimatedWaste}
       />
 
-      <Button type="submit" isLoading={isSubmitting} className="w-full">
+      <Button
+        type="submit"
+        isLoading={isSubmitting}
+        className="w-full bg-gradient-to-r from-[var(--color-accent)] to-violet-500 hover:brightness-110"
+      >
         Submit Roadblock
       </Button>
     </form>
