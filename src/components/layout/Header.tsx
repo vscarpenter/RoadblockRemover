@@ -3,6 +3,7 @@
 import type { ReactElement } from "react";
 import { useAuth } from "@/hooks/useAuth";
 import { Button } from "@/components/ui/Button";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 interface HeaderProps {
   onMenuToggle: () => void;
@@ -34,6 +35,7 @@ export function Header({ onMenuToggle }: HeaderProps): ReactElement {
             {user.email}
           </span>
         )}
+        <ThemeToggle />
         <Button variant="ghost" size="sm" onClick={logout}>
           Sign out
         </Button>

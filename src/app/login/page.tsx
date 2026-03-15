@@ -5,12 +5,17 @@ import type { ReactElement } from "react";
 import { motion } from "framer-motion";
 import { LoginForm } from "@/components/auth/LoginForm";
 import { RegisterForm } from "@/components/auth/RegisterForm";
+import { ThemeToggle } from "@/components/ui/ThemeToggle";
 
 export default function LoginPage(): ReactElement {
   const [activeTab, setActiveTab] = useState<"login" | "register">("login");
 
   return (
     <div className="relative flex min-h-screen items-center justify-center bg-[var(--color-base)] px-4">
+      {/* Theme toggle */}
+      <div className="absolute right-4 top-4 z-20">
+        <ThemeToggle />
+      </div>
       {/* Grid pattern background */}
       <div className="grid-pattern absolute inset-0" />
       {/* Radial glow */}

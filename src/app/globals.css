@@ -1,27 +1,27 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-/* ─── Design Tokens ─── Dark-first engineering command center ─── */
+/* ─── Design Tokens ─── Dual-theme engineering command center ─── */
 
 @theme {
-  /* Severity colors — vibrant on dark */
-  --color-severity-low: #34d399;
-  --color-severity-med: #fbbf24;
-  --color-severity-high: #fb923c;
-  --color-severity-critical: #f87171;
+  /* Severity colors — shared across themes */
+  --color-severity-low: #16a34a;
+  --color-severity-med: #d97706;
+  --color-severity-high: #ea580c;
+  --color-severity-critical: #dc2626;
 
   /* Status colors */
-  --color-status-open: #818cf8;
-  --color-status-in-progress: #fbbf24;
-  --color-status-resolved: #34d399;
+  --color-status-open: #6366f1;
+  --color-status-in-progress: #d97706;
+  --color-status-resolved: #16a34a;
   --color-status-closed: #6b7280;
 
   /* Heat map — plasma gradient (purple → rose) */
   --color-heat-0: var(--color-surface);
-  --color-heat-1: #2d1b4e;
-  --color-heat-2: #5b21b6;
-  --color-heat-3: #7c3aed;
-  --color-heat-4: #c026d3;
+  --color-heat-1: #ede9fe;
+  --color-heat-2: #c4b5fd;
+  --color-heat-3: #8b5cf6;
+  --color-heat-4: #d946ef;
   --color-heat-5: #f43f5e;
 
   /* Font families */
@@ -29,8 +29,32 @@
   --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
 }
 
-/* ─── Surface & Color System ─── */
+/* ─── Light Theme (default) ─── */
 :root {
+  --color-base: #f8f9fb;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f1f3f5;
+  --color-surface-overlay: #e9ecef;
+  --color-border-subtle: rgba(0, 0, 0, 0.06);
+  --color-border-default: rgba(0, 0, 0, 0.10);
+  --color-border-strong: rgba(0, 0, 0, 0.18);
+  --color-text-primary: #1a1a2e;
+  --color-text-secondary: #4a4a5a;
+  --color-text-tertiary: #8a8a9a;
+  --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
+  --color-accent-muted: rgba(99, 102, 241, 0.08);
+
+  /* Category accent colors */
+  --color-cat-cicd: #3b82f6;
+  --color-cat-dx: #7c3aed;
+  --color-cat-process: #d97706;
+  --color-cat-tooling: #0d9488;
+  --color-cat-culture: #e11d48;
+}
+
+/* ─── Dark Theme ─── */
+[data-theme="dark"] {
   --color-base: #0a0a0b;
   --color-surface: #141416;
   --color-surface-raised: #1c1c20;
@@ -45,18 +69,41 @@
   --color-accent-hover: #818cf8;
   --color-accent-muted: rgba(99, 102, 241, 0.1);
 
-  /* Category accent colors — for left bars and tints */
+  /* Category accent colors — brighter for dark backgrounds */
   --color-cat-cicd: #60a5fa;
   --color-cat-dx: #a78bfa;
   --color-cat-process: #fbbf24;
   --color-cat-tooling: #2dd4bf;
   --color-cat-culture: #fb7185;
+
+  /* Severity — brighter for dark */
+  --color-severity-low: #34d399;
+  --color-severity-med: #fbbf24;
+  --color-severity-high: #fb923c;
+  --color-severity-critical: #f87171;
+
+  /* Status — brighter for dark */
+  --color-status-open: #818cf8;
+  --color-status-in-progress: #fbbf24;
+  --color-status-resolved: #34d399;
+
+  /* Heat map — dark plasma gradient */
+  --color-heat-1: #2d1b4e;
+  --color-heat-2: #5b21b6;
+  --color-heat-3: #7c3aed;
+  --color-heat-4: #c026d3;
+  --color-heat-5: #f43f5e;
 }
 
 /* ─── Base Styles ─── */
 body {
   background-color: var(--color-base);
   color: var(--color-text-primary);
+}
+
+/* Only animate theme transitions after initial load (class added by ThemeProvider) */
+.theme-ready body {
+  transition: background-color 0.2s ease, color 0.2s ease;
 }
 
 /* ─── Scrollbar Styling ─── */
@@ -70,16 +117,29 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.15);
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.25);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
 /* ─── Selection ─── */
 ::selection {
+  background: rgba(99, 102, 241, 0.2);
+  color: #1a1a2e;
+}
+
+[data-theme="dark"] ::selection {
   background: rgba(99, 102, 241, 0.3);
   color: #ededef;
 }
@@ -91,25 +151,37 @@ body {
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.03;
+  opacity: 0;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
   background-repeat: repeat;
   background-size: 256px 256px;
 }
 
+[data-theme="dark"] .noise-overlay::before {
+  opacity: 0.03;
+}
+
 /* ─── Glass Surfaces ─── */
 .glass {
-  background: rgba(20, 20, 22, 0.8);
+  background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--color-border-subtle);
 }
 
 .glass-raised {
-  background: rgba(28, 28, 32, 0.85);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
   border: 1px solid var(--color-border-default);
+}
+
+[data-theme="dark"] .glass {
+  background: rgba(20, 20, 22, 0.8);
+}
+
+[data-theme="dark"] .glass-raised {
+  background: rgba(28, 28, 32, 0.85);
 }
 
 /* ─── Keyframe Animations ─── */
@@ -175,19 +247,31 @@ body {
 /* ─── Grid Pattern (for login page) ─── */
 .grid-pattern {
   background-image:
-    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    linear-gradient(rgba(0, 0, 0, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
-/* ─── Heat Cell Glow Effects ─── */
-.heat-glow-1 { box-shadow: inset 0 0 20px rgba(45, 27, 78, 0.5); }
-.heat-glow-2 { box-shadow: inset 0 0 20px rgba(91, 33, 182, 0.4); }
-.heat-glow-3 { box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.4); }
-.heat-glow-4 { box-shadow: inset 0 0 20px rgba(192, 38, 211, 0.4); }
-.heat-glow-5 { box-shadow: inset 0 0 24px rgba(244, 63, 94, 0.5); }
+[data-theme="dark"] .grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
 
-/* ─── Prose dark mode overrides ─── */
+/* ─── Heat Cell Glow Effects ─── */
+.heat-glow-1 { box-shadow: inset 0 0 20px rgba(237, 233, 254, 0.3); }
+.heat-glow-2 { box-shadow: inset 0 0 20px rgba(196, 181, 253, 0.3); }
+.heat-glow-3 { box-shadow: inset 0 0 20px rgba(139, 92, 246, 0.3); }
+.heat-glow-4 { box-shadow: inset 0 0 20px rgba(217, 70, 239, 0.3); }
+.heat-glow-5 { box-shadow: inset 0 0 24px rgba(244, 63, 94, 0.4); }
+
+[data-theme="dark"] .heat-glow-1 { box-shadow: inset 0 0 20px rgba(45, 27, 78, 0.5); }
+[data-theme="dark"] .heat-glow-2 { box-shadow: inset 0 0 20px rgba(91, 33, 182, 0.4); }
+[data-theme="dark"] .heat-glow-3 { box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.4); }
+[data-theme="dark"] .heat-glow-4 { box-shadow: inset 0 0 20px rgba(192, 38, 211, 0.4); }
+[data-theme="dark"] .heat-glow-5 { box-shadow: inset 0 0 24px rgba(244, 63, 94, 0.5); }
+
+/* ─── Prose overrides (adapts to theme via variables) ─── */
 .prose-dark {
   --tw-prose-body: var(--color-text-secondary);
   --tw-prose-headings: var(--color-text-primary);
