@@ -72,6 +72,7 @@ export function useRoadblocks(
       const records = await pb.collection("roadblocks").getFullList({
         sort: "-created",
         filter: filter || undefined,
+        requestKey: null,
       });
 
       setRoadblocks(records.map(toRecord<Roadblock>));

@@ -24,7 +24,7 @@ export function useRoadblock(id: string): UseRoadblockReturn {
       try {
         setIsLoading(true);
         setError(null);
-        const record = await pb.collection("roadblocks").getOne(id);
+        const record = await pb.collection("roadblocks").getOne(id, { requestKey: null });
         setRoadblock(toRecord<Roadblock>(record));
       } catch (err) {
         const message =

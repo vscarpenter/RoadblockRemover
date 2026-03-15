@@ -15,10 +15,15 @@ export default function NotificationsPage(): ReactElement {
       <div className="mx-auto max-w-2xl">
         <div className="mb-6 flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
+            <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">
+              Notifications
+            </h1>
             {unreadCount > 0 && (
-              <p className="mt-1 text-sm text-gray-600">
-                {unreadCount} unread
+              <p className="mt-1 text-sm text-[var(--color-text-secondary)]">
+                <span className="inline-flex items-center justify-center rounded-full bg-[var(--color-accent-muted)] px-2 py-0.5 font-mono text-xs text-[var(--color-accent-hover)]">
+                  {unreadCount}
+                </span>
+                <span className="ml-1.5">unread</span>
               </p>
             )}
           </div>
@@ -36,7 +41,7 @@ export default function NotificationsPage(): ReactElement {
           </div>
         </div>
 
-        <div className="rounded-lg bg-white shadow-sm">
+        <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] overflow-hidden">
           <NotificationList
             notifications={notifications}
             onMarkAsRead={markAsRead}

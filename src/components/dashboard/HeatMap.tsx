@@ -64,9 +64,13 @@ function SeverityColumnTotal({
     0,
   );
   return (
-    <div className="flex h-12 flex-col items-center justify-center rounded-md bg-gray-100 text-sm">
-      <span className="font-bold text-gray-700">{sevRoadblocks.length}</span>
-      <span className="text-xs text-gray-500">{sevWaste}h/wk</span>
+    <div className="flex h-12 flex-col items-center justify-center rounded-lg bg-[var(--color-surface-overlay)]">
+      <span className="font-mono text-sm font-bold text-[var(--color-text-primary)]">
+        {sevRoadblocks.length}
+      </span>
+      <span className="font-mono text-[10px] text-[var(--color-text-tertiary)]">
+        {sevWaste}h/wk
+      </span>
     </div>
   );
 }
@@ -86,17 +90,17 @@ export function HeatMap({ roadblocks }: HeatMapProps): ReactElement {
     <div className="overflow-x-auto">
       <div className="min-w-[640px]">
         {/* Header row: severity labels */}
-        <div className="grid grid-cols-[160px_repeat(4,1fr)_80px] gap-2 mb-2">
+        <div className="grid grid-cols-[160px_repeat(4,1fr)_80px] gap-2 mb-3">
           <div />
           {SEVERITIES.map((sev) => (
             <div
               key={sev.value}
-              className="text-center text-sm font-semibold text-gray-700"
+              className="text-center font-mono text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)]"
             >
               {sev.label}
             </div>
           ))}
-          <div className="text-center text-sm font-semibold text-gray-500">
+          <div className="text-center font-mono text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)]">
             Total
           </div>
         </div>
@@ -110,11 +114,15 @@ export function HeatMap({ roadblocks }: HeatMapProps): ReactElement {
               className="grid grid-cols-[160px_repeat(4,1fr)_80px] gap-2 mb-2"
             >
               <div className="flex items-center">
-                <span
-                  className={`rounded-full px-3 py-1 text-xs font-medium ${cat.bgColor} ${cat.color}`}
-                >
-                  {cat.label}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span
+                    className="h-8 w-0.5 rounded-full"
+                    style={{ backgroundColor: cat.accentVar }}
+                  />
+                  <span className="text-[13px] font-medium text-[var(--color-text-secondary)]">
+                    {cat.label}
+                  </span>
+                </div>
               </div>
               {SEVERITIES.map((sev) => (
                 <HeatMapCell
@@ -123,11 +131,11 @@ export function HeatMap({ roadblocks }: HeatMapProps): ReactElement {
                   maxCount={maxCount}
                 />
               ))}
-              <div className="flex h-20 flex-col items-center justify-center rounded-md bg-gray-100 text-sm">
-                <span className="font-bold text-gray-700">
+              <div className="flex h-20 flex-col items-center justify-center rounded-lg bg-[var(--color-surface-overlay)]">
+                <span className="font-mono text-sm font-bold text-[var(--color-text-primary)]">
                   {totals?.count ?? 0}
                 </span>
-                <span className="text-xs text-gray-500">
+                <span className="font-mono text-[10px] text-[var(--color-text-tertiary)]">
                   {totals?.waste ?? 0}h/wk
                 </span>
               </div>
@@ -136,7 +144,7 @@ export function HeatMap({ roadblocks }: HeatMapProps): ReactElement {
         })}
 
         {/* Grand totals row */}
-        <div className="mt-2 grid grid-cols-[160px_repeat(4,1fr)_80px] gap-2">
+        <div className="mt-3 grid grid-cols-[160px_repeat(4,1fr)_80px] gap-2">
           <div />
           {SEVERITIES.map((sev) => (
             <SeverityColumnTotal
@@ -145,9 +153,13 @@ export function HeatMap({ roadblocks }: HeatMapProps): ReactElement {
               severity={sev.value}
             />
           ))}
-          <div className="flex h-12 flex-col items-center justify-center rounded-md bg-gray-200 text-sm">
-            <span className="font-bold text-gray-900">{grandTotal}</span>
-            <span className="text-xs text-gray-600">{grandWaste}h/wk</span>
+          <div className="flex h-12 flex-col items-center justify-center rounded-lg bg-[var(--color-accent-muted)]">
+            <span className="font-mono text-sm font-bold text-[var(--color-accent-hover)]">
+              {grandTotal}
+            </span>
+            <span className="font-mono text-[10px] text-[var(--color-accent)]">
+              {grandWaste}h/wk
+            </span>
           </div>
         </div>
       </div>

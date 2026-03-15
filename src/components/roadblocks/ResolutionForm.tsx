@@ -29,7 +29,7 @@ export function ResolutionForm({ roadblock, onUpdate }: ResolutionFormProps): Re
 
   if (allowedNext.length === 0) {
     return (
-      <p className="text-sm text-gray-500">
+      <p className="text-sm text-[var(--color-text-tertiary)]">
         This roadblock is closed. No further transitions available.
       </p>
     );
@@ -42,7 +42,6 @@ export function ResolutionForm({ roadblock, onUpdate }: ResolutionFormProps): Re
     event.preventDefault();
     setError("");
 
-    // Require resolution note when closing
     if (nextStatus === "Closed" && !resolutionNote.trim()) {
       setError("A resolution note is required when closing a roadblock.");
       return;
@@ -88,7 +87,7 @@ export function ResolutionForm({ roadblock, onUpdate }: ResolutionFormProps): Re
       />
 
       {error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-red-400" role="alert">
           {error}
         </p>
       )}

@@ -8,10 +8,10 @@ export interface StatusConfig {
 }
 
 export const STATUSES: StatusConfig[] = [
-  { value: "Open", label: "Open", color: "text-status-open", bgColor: "bg-status-open/20" },
-  { value: "In Progress", label: "In Progress", color: "text-status-in-progress", bgColor: "bg-status-in-progress/20" },
-  { value: "Resolved", label: "Resolved", color: "text-status-resolved", bgColor: "bg-status-resolved/20" },
-  { value: "Closed", label: "Closed", color: "text-status-closed", bgColor: "bg-status-closed/20" },
+  { value: "Open", label: "Open", color: "text-indigo-400", bgColor: "bg-indigo-400/10" },
+  { value: "In Progress", label: "In Progress", color: "text-amber-400", bgColor: "bg-amber-400/10" },
+  { value: "Resolved", label: "Resolved", color: "text-emerald-400", bgColor: "bg-emerald-400/10" },
+  { value: "Closed", label: "Closed", color: "text-gray-400", bgColor: "bg-gray-400/10" },
 ] as const;
 
 export const STATUS_MAP = new Map(

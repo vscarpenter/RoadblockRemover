@@ -19,25 +19,30 @@ export function RoadblockDetail({
   onUpdate,
 }: RoadblockDetailProps): ReactElement {
   const categoryConfig = CATEGORY_MAP.get(roadblock.category);
+  const currentIndex = STATUSES.findIndex((st) => st.value === roadblock.status);
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-gray-900">
+        <h1 className="text-2xl font-semibold text-[var(--color-text-primary)]">
           {roadblock.title}
         </h1>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           {categoryConfig && (
             <span
-              className={`rounded-full px-3 py-1 text-xs font-medium ${categoryConfig.bgColor} ${categoryConfig.color}`}
+              className={`inline-flex items-center gap-1.5 rounded-full border border-current/15 px-2.5 py-0.5 text-[11px] font-medium ${categoryConfig.bgColor} ${categoryConfig.color}`}
             >
+              <span
+                className="h-1.5 w-1.5 rounded-full"
+                style={{ backgroundColor: categoryConfig.accentVar }}
+              />
               {categoryConfig.label}
             </span>
           )}
           <SeverityBadge severity={roadblock.severity} />
           <StatusBadge status={roadblock.status} />
-          <span className="text-sm text-gray-500">
+          <span className="font-mono text-xs text-[var(--color-text-tertiary)]">
             {roadblock.estimated_waste} hrs/week wasted
           </span>
         </div>
@@ -46,26 +51,28 @@ export function RoadblockDetail({
       {/* Status timeline */}
       <div className="flex items-center gap-1">
         {STATUSES.map((s, index) => {
-          const isCurrent = s.value === roadblock.status;
-          const isPast =
-            STATUSES.findIndex((st) => st.value === roadblock.status) > index;
+          const isCurrent = index === currentIndex;
+          const isPast = index < currentIndex;
           return (
             <div key={s.value} className="flex items-center gap-1">
               <div
-                className={`flex h-8 items-center rounded-full px-3 text-xs font-medium ${
+                className={`flex h-8 items-center rounded-full px-3 text-xs font-medium transition-all ${
                   isCurrent
-                    ? `${s.bgColor} ${s.color} ring-2 ring-offset-1`
+                    ? `${s.bgColor} ${s.color} ring-2 ring-current/20 ring-offset-1 ring-offset-[var(--color-base)]`
                     : isPast
-                      ? "bg-gray-200 text-gray-600"
-                      : "bg-gray-100 text-gray-400"
+                      ? "bg-[var(--color-surface-overlay)] text-[var(--color-text-secondary)]"
+                      : "bg-[var(--color-surface-raised)] text-[var(--color-text-tertiary)]"
                 }`}
               >
+                {isPast && (
+                  <svg className="mr-1 h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                  </svg>
+                )}
                 {s.label}
               </div>
               {index < STATUSES.length - 1 && (
-                <svg className="h-4 w-4 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <div className={`h-px w-4 ${isPast ? "bg-[var(--color-text-tertiary)]" : "bg-[var(--color-border-subtle)]"}`} />
               )}
             </div>
           );
@@ -73,37 +80,37 @@ export function RoadblockDetail({
       </div>
 
       {/* Description */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-gray-500">
+      <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6">
+        <h2 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)]">
           Description
         </h2>
-        <div className="prose prose-sm max-w-none text-gray-700">
+        <div className="prose prose-sm prose-dark max-w-none">
           <Markdown>{roadblock.description}</Markdown>
         </div>
       </div>
 
       {/* Resolution note (if exists) */}
       {roadblock.resolution_note && (
-        <div className="rounded-lg border border-green-200 bg-green-50 p-6">
-          <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-green-700">
+        <div className="rounded-xl border border-emerald-500/15 bg-emerald-500/5 p-6">
+          <h2 className="mb-3 font-mono text-[10px] uppercase tracking-widest text-emerald-400">
             Resolution Note
           </h2>
-          <p className="text-sm text-green-800">
+          <p className="text-sm text-emerald-300">
             {roadblock.resolution_note}
           </p>
         </div>
       )}
 
       {/* Resolution workflow */}
-      <div className="rounded-lg border border-gray-200 bg-white p-6">
-        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-gray-500">
+      <div className="rounded-xl border border-[var(--color-border-subtle)] bg-[var(--color-surface)] p-6">
+        <h2 className="mb-4 font-mono text-[10px] uppercase tracking-widest text-[var(--color-text-tertiary)]">
           Update Status
         </h2>
         <ResolutionForm roadblock={roadblock} onUpdate={onUpdate} />
       </div>
 
       {/* Metadata */}
-      <div className="text-xs text-gray-400">
+      <div className="font-mono text-[10px] text-[var(--color-text-tertiary)]">
         <p>Created: {new Date(roadblock.created).toLocaleString()}</p>
         <p>Updated: {new Date(roadblock.updated).toLocaleString()}</p>
       </div>

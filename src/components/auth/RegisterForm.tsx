@@ -4,9 +4,35 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import type { ReactElement } from "react";
+import { ClientResponseError } from "pocketbase";
 import { useAuth } from "@/hooks/useAuth";
 
 const MIN_PASSWORD_LENGTH = 8;
+
+function formatPocketBaseError(err: unknown): string {
+  if (!(err instanceof ClientResponseError)) {
+    return err instanceof Error ? err.message : "Registration failed. Please try again.";
+  }
+
+  const fieldErrors = err.response?.data;
+  if (!fieldErrors || typeof fieldErrors !== "object") {
+    return err.message;
+  }
+
+  const messages: string[] = [];
+  for (const [field, detail] of Object.entries(fieldErrors)) {
+    const { code } = detail as { code: string; message: string };
+    if (field === "email" && code === "validation_not_unique") {
+      messages.push("An account with this email already exists.");
+    } else if (field === "email" && code === "validation_invalid_email") {
+      messages.push("Please enter a valid email address.");
+    } else {
+      messages.push((detail as { message: string }).message);
+    }
+  }
+
+  return messages.length > 0 ? messages.join(" ") : err.message;
+}
 
 export function RegisterForm(): ReactElement {
   const { register } = useAuth();
@@ -37,20 +63,18 @@ export function RegisterForm(): ReactElement {
       await register(email, password, passwordConfirm);
       router.replace("/dashboard/");
     } catch (err) {
-      const message =
-        err instanceof Error
-          ? err.message
-          : "Registration failed. Please try again.";
-      setError(message);
+      setError(formatPocketBaseError(err));
     } finally {
       setIsSubmitting(false);
     }
   }
 
+  const inputClasses = "mt-1.5 block w-full rounded-lg border border-[var(--color-border-default)] bg-[var(--color-surface)] px-3 py-2 text-[var(--color-text-primary)] placeholder:text-[var(--color-text-tertiary)] transition-colors focus:border-[var(--color-accent)] focus:outline-none focus:ring-1 focus:ring-[var(--color-accent)]/50";
+
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div>
-        <label htmlFor="register-email" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="register-email" className="block text-sm font-medium text-[var(--color-text-secondary)]">
           Email
         </label>
         <input
@@ -59,13 +83,13 @@ export function RegisterForm(): ReactElement {
           required
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={inputClasses}
           placeholder="you@company.com"
         />
       </div>
 
       <div>
-        <label htmlFor="register-password" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="register-password" className="block text-sm font-medium text-[var(--color-text-secondary)]">
           Password
         </label>
         <input
@@ -75,12 +99,12 @@ export function RegisterForm(): ReactElement {
           minLength={8}
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={inputClasses}
         />
       </div>
 
       <div>
-        <label htmlFor="register-password-confirm" className="block text-sm font-medium text-gray-700">
+        <label htmlFor="register-password-confirm" className="block text-sm font-medium text-[var(--color-text-secondary)]">
           Confirm Password
         </label>
         <input
@@ -90,12 +114,12 @@ export function RegisterForm(): ReactElement {
           minLength={8}
           value={passwordConfirm}
           onChange={(e) => setPasswordConfirm(e.target.value)}
-          className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 shadow-sm focus:border-blue-500 focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className={inputClasses}
         />
       </div>
 
       {error && (
-        <p className="text-sm text-red-600" role="alert">
+        <p className="text-sm text-red-400" role="alert">
           {error}
         </p>
       )}
@@ -103,7 +127,7 @@ export function RegisterForm(): ReactElement {
       <button
         type="submit"
         disabled={isSubmitting}
-        className="w-full rounded-md bg-blue-600 px-4 py-2 text-white font-medium hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+        className="w-full rounded-lg bg-gradient-to-r from-[var(--color-accent)] to-violet-500 px-4 py-2.5 text-sm font-medium text-white transition-all duration-150 hover:brightness-110 focus:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-accent)] focus-visible:ring-offset-2 focus-visible:ring-offset-[var(--color-base)] disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]"
       >
         {isSubmitting ? "Creating account..." : "Create account"}
       </button>

@@ -1,24 +1,200 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
+/* ─── Design Tokens ─── Dark-first engineering command center ─── */
+
 @theme {
-  /* Severity colors */
-  --color-severity-low: #22c55e;
-  --color-severity-med: #eab308;
-  --color-severity-high: #f97316;
-  --color-severity-critical: #ef4444;
+  /* Severity colors — vibrant on dark */
+  --color-severity-low: #34d399;
+  --color-severity-med: #fbbf24;
+  --color-severity-high: #fb923c;
+  --color-severity-critical: #f87171;
 
   /* Status colors */
-  --color-status-open: #3b82f6;
-  --color-status-in-progress: #eab308;
-  --color-status-resolved: #22c55e;
+  --color-status-open: #818cf8;
+  --color-status-in-progress: #fbbf24;
+  --color-status-resolved: #34d399;
   --color-status-closed: #6b7280;
 
-  /* Heat map intensity scale */
-  --color-heat-0: #fef2f2;
-  --color-heat-1: #fee2e2;
-  --color-heat-2: #fecaca;
-  --color-heat-3: #fca5a5;
-  --color-heat-4: #f87171;
-  --color-heat-5: #ef4444;
+  /* Heat map — plasma gradient (purple → rose) */
+  --color-heat-0: var(--color-surface);
+  --color-heat-1: #2d1b4e;
+  --color-heat-2: #5b21b6;
+  --color-heat-3: #7c3aed;
+  --color-heat-4: #c026d3;
+  --color-heat-5: #f43f5e;
+
+  /* Font families */
+  --font-sans: "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* ─── Surface & Color System ─── */
+:root {
+  --color-base: #0a0a0b;
+  --color-surface: #141416;
+  --color-surface-raised: #1c1c20;
+  --color-surface-overlay: #232328;
+  --color-border-subtle: rgba(255, 255, 255, 0.04);
+  --color-border-default: rgba(255, 255, 255, 0.07);
+  --color-border-strong: rgba(255, 255, 255, 0.12);
+  --color-text-primary: #ededef;
+  --color-text-secondary: #a0a0a8;
+  --color-text-tertiary: #5c5c66;
+  --color-accent: #6366f1;
+  --color-accent-hover: #818cf8;
+  --color-accent-muted: rgba(99, 102, 241, 0.1);
+
+  /* Category accent colors — for left bars and tints */
+  --color-cat-cicd: #60a5fa;
+  --color-cat-dx: #a78bfa;
+  --color-cat-process: #fbbf24;
+  --color-cat-tooling: #2dd4bf;
+  --color-cat-culture: #fb7185;
+}
+
+/* ─── Base Styles ─── */
+body {
+  background-color: var(--color-base);
+  color: var(--color-text-primary);
+}
+
+/* ─── Scrollbar Styling ─── */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+/* ─── Selection ─── */
+::selection {
+  background: rgba(99, 102, 241, 0.3);
+  color: #ededef;
+}
+
+/* ─── Noise Texture Overlay ─── */
+.noise-overlay::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ─── Glass Surfaces ─── */
+.glass {
+  background: rgba(20, 20, 22, 0.8);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border-subtle);
+}
+
+.glass-raised {
+  background: rgba(28, 28, 32, 0.85);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border: 1px solid var(--color-border-default);
+}
+
+/* ─── Keyframe Animations ─── */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes slide-up {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slide-in-left {
+  from { opacity: 0; transform: translateX(-12px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(248, 113, 113, 0); }
+  50% { box-shadow: 0 0 12px 2px rgba(248, 113, 113, 0.3); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes cell-flash {
+  0% { box-shadow: inset 0 0 0 2px var(--color-accent); }
+  100% { box-shadow: inset 0 0 0 2px transparent; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out;
+}
+
+.animate-slide-up {
+  animation: slide-up 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.animate-slide-in-left {
+  animation: slide-in-left 0.25s ease-out;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* ─── Shimmer Skeleton ─── */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-raised) 50%,
+    var(--color-surface) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out infinite;
+  border-radius: 0.5rem;
+}
+
+/* ─── Grid Pattern (for login page) ─── */
+.grid-pattern {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+/* ─── Heat Cell Glow Effects ─── */
+.heat-glow-1 { box-shadow: inset 0 0 20px rgba(45, 27, 78, 0.5); }
+.heat-glow-2 { box-shadow: inset 0 0 20px rgba(91, 33, 182, 0.4); }
+.heat-glow-3 { box-shadow: inset 0 0 20px rgba(124, 58, 237, 0.4); }
+.heat-glow-4 { box-shadow: inset 0 0 20px rgba(192, 38, 211, 0.4); }
+.heat-glow-5 { box-shadow: inset 0 0 24px rgba(244, 63, 94, 0.5); }
+
+/* ─── Prose dark mode overrides ─── */
+.prose-dark {
+  --tw-prose-body: var(--color-text-secondary);
+  --tw-prose-headings: var(--color-text-primary);
+  --tw-prose-links: var(--color-accent-hover);
+  --tw-prose-bold: var(--color-text-primary);
+  --tw-prose-code: var(--color-accent-hover);
+  --tw-prose-quotes: var(--color-text-secondary);
+  --tw-prose-quote-borders: var(--color-border-default);
+  --tw-prose-hr: var(--color-border-subtle);
 }

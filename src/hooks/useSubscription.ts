@@ -26,6 +26,7 @@ export function useSubscription(roadblockId: string): UseSubscriptionReturn {
       try {
         const records = await pb.collection("subscriptions").getFullList({
           filter: `user_id = "${pbEscape(user!.id)}" && roadblock_id = "${pbEscape(roadblockId)}"`,
+          requestKey: null,
         });
         setSubscriptionId(records.length > 0 ? records[0].id : null);
       } catch (err) {
